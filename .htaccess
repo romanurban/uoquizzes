@@ -1,0 +1,14 @@
+Options -Indexes
+
+# CORS
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin localhost
+</IfModule>
+
+# rewrite engine on
+Options +FollowSymlinks
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule api/(.*)$ api-server/router.php?request=$1 [QSA,NC,L]

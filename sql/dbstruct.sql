@@ -56,12 +56,11 @@ CREATE TABLE repsonse_log (
 	unamehash CHAR(32) NOT NULL,
 	tid INT NOT NULL,
 	qid INT NOT NULL,
-	aid INT NOT NULL,
+	solution VARCHAR(255) NOT NULL,
 	is_correct BOOLEAN NOT NULL DEFAULT 0,
 	ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (tid) REFERENCES tests(tid),
 	FOREIGN KEY (qid) REFERENCES questions(qid),
-	FOREIGN KEY (aid) REFERENCES answers(aid),
 	KEY unamehash_idx (unamehash)
 ) ENGINE=INNODB;
 
