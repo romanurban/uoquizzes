@@ -16,7 +16,7 @@ class LoggerController {
 	}
 
 	public static function getScore($uname, $tid, $sid) {
-		Logger::getScore($uname, $tid, $sid);
+		return Logger::getScore($uname, $tid, $sid);
 	}
 
 }

@@ -51,7 +51,7 @@ class APIController {
 		// continue with user/test context
 		$session = APIController::getSession();
 		$testCtrl = new TestsController($session['tid']);
-		$questionCtrl = new QuestionsController($firstQid);
+		$questionCtrl = new QuestionsController($qid);
 
 		$isCorrect = $questionCtrl->checkSolution($solution);
 		// let's log the fact
@@ -59,12 +59,17 @@ class APIController {
 		$nextQid = $testCtrl->getNextQuestionID($qid);
 		if ($nextQid > 0) {
 			// get next question data
+			$questionCtrl = new QuestionsController($nextQid);
 			$qTxt = $questionCtrl->getQuestionText();
 			$answers = $questionCtrl->getAnswers();
 			$progress = $testCtrl->getProgress($qid);
 			return json_encode(array("qid" => $nextQid, "txt" => $qTxt, "progress"=>$progress, "answers" => $answers));
 		} else { // that's all folks! do the logging and return result
 			$score = LoggerController::getScore($session['uname'], $session['tid'], $session['SID']);
+			error_log($session['uname']);
+			error_log($session['tid']);
+			error_log($session['SID']);
+			error_log($score);
 			$total = $testCtrl->getQuestionCount();
 			LoggerController::logFinalScore($session['uname'],$session['tid'],$score,$total);
 			return json_encode(array("uname"=>$session['uname'], "score"=>$score, "total"=>$total));
@@ -85,6 +90,7 @@ class APIController {
 	}
 
 	private function getSession() {
+		session_start();
 		return array('SID'=>session_id(), 'tid'=>$_SESSION['tid'], 'uname'=>$_SESSION['uname']);
 	}
 }

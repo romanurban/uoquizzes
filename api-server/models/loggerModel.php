@@ -16,8 +16,10 @@ class Logger {
 
 	public static function getScore($uname, $tid, $sid) {
 		$db = Connection::getInstance();
-		$req = $db->prepare('SELECT count(id) FROM repsonse_log WHERE unamehash = MD5(?) AND tid = ? AND sid = ? AND is_correct = 1');
+		$req = $db->prepare('SELECT count(id) AS score FROM repsonse_log WHERE unamehash = MD5(?) AND tid = ? AND sid = ? AND is_correct = 1');
 		$req->execute(Array($uname, $tid, $sid));
+		$res = $req->fetch();
+		return $res['score'];
 	}
 
 }
