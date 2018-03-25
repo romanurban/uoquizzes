@@ -31,6 +31,7 @@ require 'controllers/loggerController.php';
 *
 */
 class APIController {
+	// N.B. this is NOT REST API
 
 	public static function testList() {
 		$result = TestsController::list();

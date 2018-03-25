@@ -203,5 +203,5 @@ INSERT INTO questions_of_test (tid, qid, prio) VALUES (4, 3, 100);
 INSERT INTO questions_of_test (tid, qid, prio) VALUES (4, 2, 110);
 INSERT INTO questions_of_test (tid, qid, prio) VALUES (4, 1, 120);
 
-INSERT INTO tests (name, prio) VALUES ("Fifth Tiny Sample Test", 30);
+INSERT INTO tests (name, prio) VALUES ("Fifth Tiny Sample Test", 50);
 INSERT INTO questions_of_test (tid, qid, prio) VALUES (5, 10, 10);
