@@ -1,5 +1,6 @@
 <?php
 
+// allow this in ./htaccess before using
 // test controllers directly, without API wrapper
 // those tests are based on demo data
 
