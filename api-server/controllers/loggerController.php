@@ -6,19 +6,17 @@ require 'models/loggerModel.php';
 class LoggerController {
 
 
-	public function doLogging($uname,$tid,$qid,$solution,$is_correct) {
-		// just insert in a table
+	public static function doLogging($uname,$tid,$qid,$sid,$solution,$isCorrect) {
+		Logger::doLogging($uname,$tid,$qid,$sid,$solution,$isCorrect);
 	}
 
 
-	public function finalScore($uname,$tid,$score,$total) {
-		// aks total from TestController -> getQuestionCount
-		// somehow get score (probably from log, maybe better approach)
-		// but anyway seems like we need SSID field in a log table
+	public static function logFinalScore($uname,$tid,$score,$total) {
+		Logger::logFinalScore($uname,$tid,$score,$total);
 	}
 
-	public function getScore($uname,$tid) {
-		// select over log table
+	public static function getScore($uname, $tid, $sid) {
+		Logger::getScore($uname, $tid, $sid);
 	}
 
 }

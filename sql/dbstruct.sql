@@ -48,7 +48,7 @@ CREATE TABLE answers_on_questions (
 ) ENGINE=INNODB;
 
 -- here goes some log tables
--- let's suppose, that search will happen mostly on username and test id (fk indexed)
+-- let's suppose, that search will happen mostly on username, sid and test id (fk indexed)
 -- so since db will grow very big, let's have a hash index for username
 CREATE TABLE repsonse_log (
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -57,11 +57,13 @@ CREATE TABLE repsonse_log (
 	tid INT NOT NULL,
 	qid INT NOT NULL,
 	solution VARCHAR(255) NOT NULL,
+	sid VARCHAR(32) NOT NULL,
 	is_correct BOOLEAN NOT NULL DEFAULT 0,
 	ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (tid) REFERENCES tests(tid),
 	FOREIGN KEY (qid) REFERENCES questions(qid),
-	KEY unamehash_idx (unamehash)
+	KEY unamehash_idx (unamehash),
+	KEY sid_idx (sid)
 ) ENGINE=INNODB;
 
 CREATE TABLE results (

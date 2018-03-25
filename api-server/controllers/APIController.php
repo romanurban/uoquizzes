@@ -5,62 +5,88 @@ require 'controllers/testsController.php';
 require 'controllers/questionsController.php';
 require 'controllers/loggerController.php';
 
-// glues together controller methods into real scenarios
+/* this class glues together controller methods into real scenarios
+*
+*	testList():
+*		actions: list
+*		return:  json array of tests
+*
+*	testBegin():
+*		actions: getFirstQuestionID
+*				 getQuestionText
+*				 getAnswers
+*				 startSession
+*		return:  array(qid, txt, answers: array())
+*
+*	testProceed():
+*		actions: checkSolution
+*				 doLogging
+*				 getNextQuestionID
+*     nextQid>0: getQuestionText
+*				 getAnswers
+*		return:  array(qid, txt, progress, answers: array())
+*    nextQid<=0: getScore
+*				 logFinalScore
+*		return:  array(uname, score, total)
+*
+*/
 class APIController {
 
 	public static function testList() {
 		$result = TestsController::list();
-		return $result;
+		return json_encode($result);
 	}
 
 	public static function testBegin($tid,$uname) {
-		// set session stuff
 		$testCtrl = new TestsController($tid);
 		$firstQid = $testCtrl->getFirstQuestionID();
 		$questionCtrl = new QuestionsController($firstQid);
 		$qTxt = $questionCtrl->getQuestionText();
 		$answers = $questionCtrl->getAnswers();
-
+		APIController::startSession($tid, $uname);
 		return json_encode(array("qid" => $firstQid, "txt" => $qTxt, "answers" => $answers));
 	}
 
-	public static function testProceed($qid) {
-		// here we should check session and extract stuff from there like uname. testID
-		// create isntance ?
+	public static function testProceed($qid, $solution) {
+		// continue with user/test context
+		$session = APIController::getSession();
+		$testCtrl = new TestsController($session['tid']);
+		$questionCtrl = new QuestionsController($firstQid);
 
-		return $result;
+		$isCorrect = $questionCtrl->checkSolution($solution);
+		// let's log the fact
+		LoggerController::doLogging($session['uname'],$session['tid'],$qid,$session['SID'],$solution,$isCorrect);
+		$nextQid = $testCtrl->getNextQuestionID($qid);
+		if ($nextQid > 0) {
+			// get next question data
+			$qTxt = $questionCtrl->getQuestionText();
+			$answers = $questionCtrl->getAnswers();
+			$progress = $testCtrl->getProgress($qid);
+			return json_encode(array("qid" => $nextQid, "txt" => $qTxt, "progress"=>$progress, "answers" => $answers));
+		} else { // that's all folks! do the logging and return result
+			$score = LoggerController::getScore($session['uname'], $session['tid'], $session['SID']);
+			$total = $testCtrl->getQuestionCount();
+			LoggerController::logFinalScore($session['uname'],$session['tid'],$score,$total);
+			return json_encode(array("uname"=>$session['uname'], "score"=>$score, "total"=>$total));
+		}
+		
 	}
 
-	private function setSessionStuff() {
-		// set session stuff
+	private function startSession($tid, $uname) {
+		if (isset($_SESSION)) { //loose previous session if any
+			unset($_SESSION);
+			session_unset();
+			session_destroy();
+		}
+		session_start();
+		session_regenerate_id(FALSE);
+		$_SESSION['tid'] = $tid;
+		$_SESSION['uname'] = $uname;
 	}
 
-	private function getSessionStuff() {
-		// get session stuff
+	private function getSession() {
+		return array('SID'=>session_id(), 'tid'=>$_SESSION['tid'], 'uname'=>$_SESSION['uname']);
 	}
-
 }
-
-// tests/list
-//		list
-
-// test/begin
-//		getFirstQuestionID
-//		getQuestionText
-//		getAnswers
-//		return as a whole json
-
-// test/proceed
-//		checkSolution
-//		dothelog
-//		getNextQuestionID - returned > 0
-//------------------
-//		getQuestionText
-//		getAnswers
-//		return as a whole json
-//-------------------
-//		getNextQuestionID - returned < 0
-//		dotheFinallog
-//		getScore
 
 ?>
