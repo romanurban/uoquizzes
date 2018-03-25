@@ -2,7 +2,7 @@ Options -Indexes
 
 # CORS
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin localhost
+	Header set Access-Control-Allow-Origin localhost
 </IfModule>
 
 # rewrite engine on

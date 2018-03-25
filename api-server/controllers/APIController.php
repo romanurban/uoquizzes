@@ -22,10 +22,10 @@ require 'controllers/loggerController.php';
 *		actions: checkSolution
 *				 doLogging
 *				 getNextQuestionID
-*     nextQid>0: getQuestionText
+*	nextQid>0: getQuestionText
 *				 getAnswers
 *		return:  array(qid, txt, progress, answers: array())
-*    nextQid<=0: getScore
+*	nextQid<=0: getScore
 *				 logFinalScore
 *		return:  array(uname, score, total)
 *
