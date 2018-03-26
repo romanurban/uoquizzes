@@ -36,14 +36,16 @@ var initialForm = Vue.component('initial-form', {
 	props: ['uname', 'tid'] // sync this with parent component
 });
 
-/* test steps */
+/* control test steps flow */
 var testSteps = Vue.component('test-steps', {
 	template : '#test-steps',
 	data: function() {
 		return {
+			buttonTxt: 'Next',
 			answers: [],
 			questionID: 0,
-			questionText: ''
+			questionText: '',
+			progress: 0
 		}
 	},
 	created: function () {
@@ -61,6 +63,9 @@ var testSteps = Vue.component('test-steps', {
 			.then(function (response) {
 				that.questionID = response.data['qid'];
 				that.questionText = response.data['txt'];
+				if (response.data['nextqid'] < 0) {
+					that.buttonTxt = 'Finish';
+				}
 				for (idx in response.data.answers) {
 					that.answers.push({aid: idx, txt: response.data.answers[idx], active: false}); 
 				}
@@ -80,9 +85,19 @@ var testSteps = Vue.component('test-steps', {
 				}
 			})
 			.then(function (response) {
-				console.log(response.data);
-				if (response.data['qid'] < 0) { // end. time to diplay score
-					
+				if (response.data['score']) { // end. time to diplay score
+					that.$parent.endTest(response.data['score'], response.data['total']);
+				} else {
+					that.answers = []; // wipe previous question answers
+					that.questionID = response.data['qid'];
+					that.questionText = response.data['txt'];
+					that.progress = response.data['progress'];
+					if (response.data['nextqid'] < 0) {
+						that.buttonTxt = 'Finish';
+					}
+					for (idx in response.data.answers) {
+						that.answers.push({aid: idx, txt: response.data.answers[idx], active: false}); 
+					}
 				}
 			})
 			.catch(function (error) {
@@ -110,12 +125,23 @@ var testSteps = Vue.component('test-steps', {
 			}
 		}
 	},
-	props: ['uname', 'tid']
+	props: ['uname', 'tid'] // sync this with parent component
 });
 
-/* test results */
+/* display results */
 var finalScore = Vue.component('final-score', {
 	template : '#final-score',
+	data: function() {
+		return {
+			score: false,
+			total: false
+		}
+	},
+	created: function () {
+		this.score = this.$parent.score;
+		this.total = this.$parent.total;
+	},
+	props: ['uname'] // sync this with parent component
 });
 
 
@@ -125,7 +151,9 @@ new Vue({
 	data: {
 		currentComponent: 'initialForm', // always start from initial form
 		tid: 0,
-		uname: ''
+		uname: '',
+		score: '',
+		total: ''
 	},
 	components: {	initialForm: initialForm,
 					testSteps: testSteps,
@@ -134,6 +162,11 @@ new Vue({
 	methods: {
 		beginTest: function () {
 			this.currentComponent = 'testSteps';
+		},
+		endTest: function (score, total) {
+			this.score = score;
+			this.total = total;
+			this.currentComponent = 'finalScore';
 		}
 	}
 });

@@ -30,17 +30,20 @@
 
 	<template id="test-steps">
 		<div id="container">
-			<h3 class="text-center">Test started</h3>
+			<h3 class="text-center">{{questionText}}</h3>
 			<ul class="answer-list" v-cloak>
 				 <li v-for="answer in answers" id="answer.aid" v-on:click="toggleActive(answer)" v-bind:class="{ 'active': answer.active}">{{answer.txt}}</li>
 			</ul>
-			<button @click="proceed()" :disabled="isDisabled">Next</button>
+			<div>progress: {{progress}}%</div>
+			<button @click="proceed()" :disabled="isDisabled">{{buttonTxt}}</button>
 		</div>
 	</template>
 
 	<template id="final-score">
 		<div id="container">
 			<h3 class="text-center">Final score</h3>
+			<div v-cloak>{{uname}}</div>
+			<div v-cloak>Your result is: {{score}} of {{total}}</div>
 		</div>
 	</template>
 

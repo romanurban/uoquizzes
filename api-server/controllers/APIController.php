@@ -13,18 +13,20 @@ require 'controllers/loggerController.php';
 *
 *	testBegin():
 *		actions: getFirstQuestionID
+*				 getNextQuestionID
 *				 getQuestionText
 *				 getAnswers
 *				 startSession
-*		return:  array(qid, txt, answers: array())
+*		return:  array(qid, nextqid, txt, answers: array())
 *
 *	testProceed():
 *		actions: checkSolution
 *				 doLogging
 *				 getNextQuestionID
+*			 	 getNextQuestionID (second next)
 *	nextQid>0: getQuestionText
 *				 getAnswers
-*		return:  array(qid, txt, progress, answers: array())
+*		return:  array(qid, nextqid, txt, progress, answers: array())
 *	nextQid<=0: getScore
 *				 logFinalScore
 *		return:  array(uname, score, total)
@@ -41,11 +43,12 @@ class APIController {
 	public static function testBegin($tid,$uname) {
 		$testCtrl = new TestsController($tid);
 		$firstQid = $testCtrl->getFirstQuestionID();
+		$nextQid = $testCtrl->getNextQuestionID($firstQid);
 		$questionCtrl = new QuestionsController($firstQid);
 		$qTxt = $questionCtrl->getQuestionText();
 		$answers = $questionCtrl->getAnswers();
 		APIController::startSession($tid, $uname);
-		return json_encode(array("qid" => $firstQid, "txt" => $qTxt, "answers" => $answers));
+		return json_encode(array("qid" => $firstQid, "nextqid" => $nextQid, "txt" => $qTxt, "answers" => $answers));
 	}
 
 	public static function testProceed($qid, $solution) {
@@ -63,8 +66,9 @@ class APIController {
 			$questionCtrl = new QuestionsController($nextQid);
 			$qTxt = $questionCtrl->getQuestionText();
 			$answers = $questionCtrl->getAnswers();
-			$progress = $testCtrl->getProgress($qid);
-			return json_encode(array("qid" => $nextQid, "txt" => $qTxt, "progress"=>$progress, "answers" => $answers));
+			$progress = $testCtrl->getProgress($nextQid);
+			$secondNextQid = $testCtrl->getNextQuestionID($nextQid);
+			return json_encode(array("qid" => $nextQid, "nextqid" => $secondNextQid, "txt" => $qTxt, "progress"=>$progress, "answers" => $answers));
 		} else { // that's all folks! do the logging and return result
 			$score = LoggerController::getScore($session['uname'], $session['tid'], $session['SID']);
 			error_log($session['uname']);
