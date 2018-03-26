@@ -1,8 +1,9 @@
-var initialform = Vue.component('initial-form',{
+/* initial form */
+var initialForm = Vue.component('initial-form', {
 	template : '#initial-form',
 	data: function() {
 		return {
-			tests: []
+			tests: [{value: 0, name: 'Select test'}]
 		}
 	},
 	created: function () {
@@ -22,29 +23,81 @@ var initialform = Vue.component('initial-form',{
 					console.log(error);
 				});
 		}
-	}
+	},
+	computed: {
+		isDisabled () {
+			if (this.uname.length > 0 && this.tid != 0) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	},
+	props: ['uname', 'tid'] // sync this with parent component
 });
 
-var testSteps = Vue.component('test-steps',{
+/* test steps */
+var testSteps = Vue.component('test-steps', {
 	template : '#test-steps',
+	data: function() {
+		return {
+			answers: [],
+			questionID: 0,
+			questionText: ''
+		}
+	},
+	created: function () {
+		this.init();
+	},
+	methods: {
+		init: function () {
+			var that = this;
+			axios.get('../api/test/begin', {
+					params: {
+						uname: this.uname,
+						tid: this.tid
+					}
+			})
+			.then(function (response) {
+				that.questionID = response.data['qid'];
+				that.questionText = response.data['txt'];
+				for (idx in response.data.answers) {
+					that.answers.push({aid: idx, txt: response.data.answers[idx]}); 
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		},
+		proceed: function () {
+			alert('proceed '+ this.questionID);
+			// todo get solution
+		}
+	},
+	props: ['uname', 'tid']
 });
 
-var finalScore = Vue.component('final-score',{
+/* test results */
+var finalScore = Vue.component('final-score', {
 	template : '#final-score',
 });
 
+
+/* main app */
 new Vue({
 	el: '#app',
 	data: {
-		currentComponent: "initialform",
+		currentComponent: 'initialForm', // always start from initial form
+		tid: 0,
+		uname: ''
 	},
-	components: {	initialform: initialform,
+	components: {	initialForm: initialForm,
 					testSteps: testSteps,
 					finalScore: finalScore
 	},
 	methods: {
-		swapComponent: function (component) {
-			this.currentComponent = component;
-		},
+		beginTest: function () {
+			this.currentComponent = 'testSteps';
+		}
 	}
 });

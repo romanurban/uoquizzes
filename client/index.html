@@ -9,25 +9,29 @@
 <body>
 
 	<div id="app">
-		<div :is="currentComponent"></div>
+		<div :uname.sync="uname" :tid.sync="tid" :is="currentComponent"></div>
 		<div v-show="!currentComponent">
 		</div>
 	</div>
 
 	<template id="initial-form">
 		<div id="container">
-			<h3 class="text-center">Choose test</h3>
-			<input style="display: block" type="text" id="uname" />
-			<select  style="display: block" v-cloak id="tests" >
+			<h3 class="text-center">Complete the test</h3>
+			<input style="display: block" type="text" id="uname" :value="uname" @input="$emit('update:uname', $event.target.value)" placeholder="Type your name" />
+			<select style="display: block" v-cloak id="tid" :value="tid" @input="$emit('update:tid', $event.target.value)">
 				<option v-for="test in tests" :value="test.value">{{ test.name }}</option>
 			</select>
-			<button @click="$parent.swapComponent('testSteps')">Begin</button>
+			<button @click="$parent.beginTest()" :disabled="isDisabled">Begin</button>
 		</div>
 	</template>
 
 	<template id="test-steps">
 		<div id="container">
 			<h3 class="text-center">Test started</h3>
+			<ul class="answer-list" v-cloak>
+				 <li v-for="answer in answers" id="answer.aid">{{answer.txt}}</li>
+			</ul>
+			<button @click="proceed()">Next</button>
 		</div>
 	</template>
 
