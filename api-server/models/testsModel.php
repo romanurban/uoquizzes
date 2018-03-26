@@ -8,7 +8,7 @@ class Test {
 	private $testQuestions;
 
 	// get test properties and test question list in format array(prio=>qid)
-	public function __construct($tid) {
+	public function __construct(int $tid) {
 		$this->tid = $tid;
 		$db = Connection::getInstance();
 
@@ -36,7 +36,6 @@ class Test {
 	}
 
 	public function getTestQuestions() {
-		// debug error_log(print_r($this->testQuestions,true));
 		return $this->testQuestions;
 	}
 

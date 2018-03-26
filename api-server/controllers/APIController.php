@@ -40,7 +40,7 @@ class APIController {
 		return json_encode($result);
 	}
 
-	public static function testBegin($tid,$uname) {
+	public static function testBegin(int $tid, string $uname) {
 		$testCtrl = new TestsController($tid);
 		$firstQid = $testCtrl->getFirstQuestionID();
 		$nextQid = $testCtrl->getNextQuestionID($firstQid);
@@ -51,7 +51,7 @@ class APIController {
 		return json_encode(array("qid" => $firstQid, "nextqid" => $nextQid, "txt" => $qTxt, "answers" => $answers));
 	}
 
-	public static function testProceed($qid, $solution) {
+	public static function testProceed(int $qid, string $solution) {
 		// continue with user/test context
 		$session = APIController::getSession();
 		$testCtrl = new TestsController($session['tid']);
@@ -71,10 +71,6 @@ class APIController {
 			return json_encode(array("qid" => $nextQid, "nextqid" => $secondNextQid, "txt" => $qTxt, "progress"=>$progress, "answers" => $answers));
 		} else { // that's all folks! do the logging and return result
 			$score = LoggerController::getScore($session['uname'], $session['tid'], $session['SID']);
-			error_log($session['uname']);
-			error_log($session['tid']);
-			error_log($session['SID']);
-			error_log($score);
 			$total = $testCtrl->getQuestionCount();
 			LoggerController::logFinalScore($session['uname'],$session['tid'],$score,$total);
 			return json_encode(array("uname"=>$session['uname'], "score"=>$score, "total"=>$total));
@@ -82,7 +78,7 @@ class APIController {
 		
 	}
 
-	private function startSession($tid, $uname) {
+	private function startSession(int $tid, string $uname) {
 		if (isset($_SESSION)) { //loose previous session if any
 			unset($_SESSION);
 			session_unset();

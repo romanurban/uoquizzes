@@ -8,7 +8,7 @@ class QuestionsController {
 	private $questionInst;
 	private $correctAnswers;
 
-	public function __construct($qid) {
+	public function __construct(int $qid) {
 		$this->questionInst = new Question($qid);
 		$this->correctAnswers = $this->questionInst->getCorrectAnswers();
 	}
@@ -24,7 +24,7 @@ class QuestionsController {
 	}
 
 	// expecting receive csv string with aid's
-	public function checkSolution($solutionStr) {
+	public function checkSolution(string $solutionStr) {
 		$solutions = str_getcsv($solutionStr); // more sanitizing
 		$solutions = array_unique($solutions); // prevent cheating
 		$corrCount = 0;

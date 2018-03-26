@@ -7,7 +7,7 @@ class Question {
 	private $questionAnswers;
 	private $correctAnswers;
 
-	public function __construct($qid) {
+	public function __construct(int $qid) {
 		$this->qid = $qid;
 		$db = Connection::getInstance();
 
