@@ -1,14 +1,13 @@
-new Vue({
-	el: '#app',
-	data: {
-		current: "initialform",
-		tests: []
+var initialform = Vue.component('initial-form',{
+	template : '#initial-form',
+	data: function() {
+		return {
+			tests: []
+		}
 	},
-
 	created: function () {
 		this.fetchTests();
 	},
-
 	methods: {
 		fetchTests: function () {
 			var that = this;
@@ -22,9 +21,30 @@ new Vue({
 				.catch(function (error) {
 					console.log(error);
 				});
-		},
-		beginTest: function () {
-			this.current = 'question'
+		}
+	}
+});
+
+var testSteps = Vue.component('test-steps',{
+	template : '#test-steps',
+});
+
+var finalScore = Vue.component('final-score',{
+	template : '#final-score',
+});
+
+new Vue({
+	el: '#app',
+	data: {
+		currentComponent: "initialform",
+	},
+	components: {	initialform: initialform,
+					testSteps: testSteps,
+					finalScore: finalScore
+	},
+	methods: {
+		swapComponent: function (component) {
+			this.currentComponent = component;
 		},
 	}
 });

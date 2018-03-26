@@ -3,18 +3,40 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Test your skill!</title>
+	<script src="https://unpkg.com/vue"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-<div class="container" id="app">
-	<h3 class="text-center">Choose test</h3>
-	<input style="display: block" type="text" id="uname" />
-	<select  style="display: block" v-cloak id="tests" >
-		<option v-for="test in tests" :value="test.value">{{ test.name }}</option>
-	</select>
-	<button>Begin</button>
-</div>
-<script src="https://unpkg.com/vue"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="app.js"></script>
+
+	<div id="app">
+		<div :is="currentComponent"></div>
+		<div v-show="!currentComponent">
+		</div>
+	</div>
+
+	<template id="initial-form">
+		<div id="container">
+			<h3 class="text-center">Choose test</h3>
+			<input style="display: block" type="text" id="uname" />
+			<select  style="display: block" v-cloak id="tests" >
+				<option v-for="test in tests" :value="test.value">{{ test.name }}</option>
+			</select>
+			<button @click="$parent.swapComponent('testSteps')">Begin</button>
+		</div>
+	</template>
+
+	<template id="test-steps">
+		<div id="container">
+			<h3 class="text-center">Test started</h3>
+		</div>
+	</template>
+
+	<template id="final-score">
+		<div id="container">
+			<h3 class="text-center">Final score</h3>
+		</div>
+	</template>
+
+	<script src="app.js"></script>
 </body>
 </html>
