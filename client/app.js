@@ -53,16 +53,16 @@ var testSteps = Vue.component('test-steps', {
 		init: function () {
 			var that = this;
 			axios.get('../api/test/begin', {
-					params: {
-						uname: this.uname,
-						tid: this.tid
-					}
+				params: {
+					uname: this.uname,
+					tid: this.tid
+				}
 			})
 			.then(function (response) {
 				that.questionID = response.data['qid'];
 				that.questionText = response.data['txt'];
 				for (idx in response.data.answers) {
-					that.answers.push({aid: idx, txt: response.data.answers[idx]}); 
+					that.answers.push({aid: idx, txt: response.data.answers[idx], active: false}); 
 				}
 			})
 			.catch(function (error) {
@@ -70,8 +70,44 @@ var testSteps = Vue.component('test-steps', {
 			});
 		},
 		proceed: function () {
-			alert('proceed '+ this.questionID);
-			// todo get solution
+			var solution = this.getSolution();
+			solution = solution.join(',');
+			var that = this;
+			axios.get('../api/test/proceed', {
+				params: {
+					qid: this.questionID,
+					solution: solution
+				}
+			})
+			.then(function (response) {
+				console.log(response.data);
+				if (response.data['qid'] < 0) { // end. time to diplay score
+					
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		},
+		toggleActive: function (answer) {
+			answer.active = !answer.active;
+		},
+		getSolution: function () {
+			var solutionArray = this.answers.filter(function( answer ) {
+				return answer.active == true;
+			})
+			var solution = solutionArray.map(a => a.aid);
+			return solution;
+		}
+	},
+	computed: {
+		isDisabled () {
+			var solution = this.getSolution();
+			if (solution.length > 0 ) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 	},
 	props: ['uname', 'tid']
