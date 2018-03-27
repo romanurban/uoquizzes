@@ -26,3 +26,14 @@ N.B. only absolute answer match is considered as correct!
 For testing means -correct sample answers are located in [demodata.sql](sql/demodata.sql)
 
 Log entries would be stored in repsonse_log and results tables.
+
+Some server unit tests [test.php](api-server/test.php)
+
+## Initial Form
+![](https://raw.githubusercontent.com/romanurban/uoquizzes/master/initForm.png)
+
+## Questions
+![](https://raw.githubusercontent.com/romanurban/uoquizzes/master/step.png)
+
+## Score
+![](https://raw.githubusercontent.com/romanurban/uoquizzes/master/score.png)
