@@ -27,7 +27,7 @@ For testing means -correct sample answers are located in [demodata.sql](sql/demo
 
 Log entries would be stored in repsonse_log and results tables.
 
-Some server unit tests [test.php](api-server/test.php)
+Some unit tests [test.php](api-server/test.php)
 
 ## Initial Form
 <p align="center">
