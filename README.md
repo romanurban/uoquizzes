@@ -24,4 +24,5 @@ N.B. only absolute answer match is considered as correct!
 - Navigate your browser to the 'localhost/client/'
 
 For testing means -correct sample answers are located in [demodata.sql](sql/demodata.sql)
+
 Log entries would be stored in repsonse_log and results tables.
