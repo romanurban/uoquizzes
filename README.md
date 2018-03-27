@@ -4,7 +4,7 @@
 * MySQL
 * PHP7 JSON API
 * Vue.js
-* Bootstrap
+* Bootstrap CSS
 
 App allows to register any number of multiple question - multiple choice answer quzzes, complete them, check the solution and log the results in db.
 Test, question and answer tables are not loose-coupled, so you are able to create various combinations of quizzes by reusing them.
