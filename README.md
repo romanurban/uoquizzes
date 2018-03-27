@@ -30,10 +30,16 @@ Log entries would be stored in repsonse_log and results tables.
 Some server unit tests [test.php](api-server/test.php)
 
 ## Initial Form
-![](https://raw.githubusercontent.com/romanurban/uoquizzes/master/initForm.png)
+<p align="center">
+<img style="align:center" src="https://raw.githubusercontent.com/romanurban/uoquizzes/master/initForm.png">
+</p>
 
 ## Questions
-![](https://raw.githubusercontent.com/romanurban/uoquizzes/master/step.png)
+<p align="center">
+<img style="align:center" src="https://raw.githubusercontent.com/romanurban/uoquizzes/master/step.png">
+</p>
 
 ## Score
-![](https://raw.githubusercontent.com/romanurban/uoquizzes/master/score.png)
+<p align="center">
+<img style="align:center" src="https://raw.githubusercontent.com/romanurban/uoquizzes/master/score.png">
+</p>
