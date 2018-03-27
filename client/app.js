@@ -52,6 +52,7 @@ var testSteps = Vue.component('test-steps', {
 		this.init();
 	},
 	methods: {
+		// begin chosen test
 		init: function () {
 			var that = this;
 			axios.get('../api/test/begin', {
@@ -74,6 +75,7 @@ var testSteps = Vue.component('test-steps', {
 				console.log(error);
 			});
 		},
+		// navigate to the next step
 		proceed: function () {
 			var solution = this.getSolution();
 			solution = solution.join(',');

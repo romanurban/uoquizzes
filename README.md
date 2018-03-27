@@ -1,1 +1,1 @@
-# uoquizzes
+# Multiple choice (multiple answers) quizz system

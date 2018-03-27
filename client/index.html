@@ -3,47 +3,80 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Test your skill!</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
 	<script src="https://unpkg.com/vue"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<style>
-.active {background-color: green;}
-</style>
 </head>
 <body>
 
 	<div id="app">
-		<div :uname.sync="uname" :tid.sync="tid" :is="currentComponent"></div>
-		<div v-show="!currentComponent">
-		</div>
+		<div id="container" :uname.sync="uname" :tid.sync="tid" :is="currentComponent"></div>
+		<div v-show="!currentComponent"></div>
 	</div>
 
 	<template id="initial-form">
-		<div id="container">
-			<h3 class="text-center">Complete the test</h3>
-			<input style="display: block" type="text" id="uname" :value="uname" @input="$emit('update:uname', $event.target.value)" placeholder="Type your name" />
-			<select style="display: block" v-cloak id="tid" :value="tid" @input="$emit('update:tid', $event.target.value)">
-				<option v-for="test in tests" :value="test.value">{{ test.name }}</option>
-			</select>
-			<button @click="$parent.beginTest()" :disabled="isDisabled">Begin</button>
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="text-center">
+					<h3 class="mb-0">Complete the test</h3>
+				</div>
+				<form class="form" action="javascript: return false;">
+					<div class="form-group">
+						<input id="uname" class="form-control" type="text"
+							:value="uname" @input="$emit('update:uname', $event.target.value)"
+							placeholder="Type your name" />
+					</div>
+					<div class="form-group">
+						<select v-cloak id="tid" class="form-control" 
+							:value="tid" @input="$emit('update:tid', $event.target.value)">
+							<option v-for="test in tests" :value="test.value">{{ test.name }}</option>
+						</select>
+					</div>
+					<div class="text-center begin-btn">
+						<button class="btn btn-primary btn-block" type="submit" 
+							@click="$parent.beginTest()" :disabled="isDisabled">Begin</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</template>
 
 	<template id="test-steps">
-		<div id="container">
-			<h3 class="text-center">{{questionText}}</h3>
-			<ul class="answer-list" v-cloak>
-				 <li v-for="answer in answers" id="answer.aid" v-on:click="toggleActive(answer)" v-bind:class="{ 'active': answer.active}">{{answer.txt}}</li>
-			</ul>
-			<div>progress: {{progress}}%</div>
-			<button @click="proceed()" :disabled="isDisabled">{{buttonTxt}}</button>
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped" role="progressbar"
+						aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100" 
+						:style="{width: progress + '%'}">
+					</div>
+				</div>
+
+				<h3 class="text-center">{{ questionText }}</h3>
+				<ul v-cloak class="answer-list list-group row">
+					<li class="list-group-item col-md-6 text-center"
+						id="answer.aid"
+						v-for="answer in answers"
+						v-on:click="toggleActive(answer)"
+						v-bind:class="{ 'active': answer.active}">{{ answer.txt }}</li>
+				</ul>
+				<div class="text-center begin-btn">
+					<button class="btn btn-primary btn-block" 
+					@click="proceed()" :disabled="isDisabled">{{ buttonTxt }}</button>
+				</div>
+			</div>
 		</div>
 	</template>
 
 	<template id="final-score">
-		<div id="container">
-			<h3 class="text-center">Final score</h3>
-			<div v-cloak>{{uname}}</div>
-			<div v-cloak>Your result is: {{score}} of {{total}}</div>
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="text-center">
+					<h3 class="f-score mb-0">Final score</h3>
+					<h4 v-cloak>Thank you, {{ uname }}!</h4>
+					<h4 v-cloak>Your result is: {{ score }} of {{ total }}</h4>
+				</div>
+			</div>
 		</div>
 	</template>
 
